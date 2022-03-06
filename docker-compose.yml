@@ -1,0 +1,60 @@
+version: "3.8"
+services:
+  mongodb:
+    container_name: ku-mongo
+    image: "mongo:4-bionic"
+    volumes:
+      - ./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
+      - data:/data/db
+    env_file:
+      - ./env/mongo.env
+    ports:
+      - "27018:27017"
+    networks:
+      - ku-net
+
+  core:
+    container_name: ku-core
+    build:
+      context: ./core
+      dockerfile: Dockerfile.dev
+      args:
+        PORT: 3000
+    ports:
+      - "80:3000"
+      - "9229:9229"
+    volumes:
+      - logs:/app/logs
+      - ./core:/app
+      - /app/node_modules
+    environment:
+      AUTH_HOST: ku-auth
+      MONGO_HOST: ku-mongo
+    env_file:
+      - ./core/.env
+    networks:
+      - ku-net
+    depends_on:
+      - auth
+      - mongodb
+
+  auth:
+    container_name: ku-auth
+    build:
+      context: ./auth
+      dockerfile: Dockerfile.dev
+      args:
+        PORT: 3000
+    ports:
+      - "3001:3000"
+      - "9230:9230"
+    networks:
+      - ku-net
+
+volumes:
+  data:
+  logs:
+
+networks:
+  ku-net:
+    name: ku-net

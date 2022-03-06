@@ -15,4 +15,9 @@ export class AppController {
   saveToFile(@Body() data: SaveToFileDto) {
     return this.appService.saveToFile(data);
   }
+
+  @Get('/check/auth')
+  checkAuth() {
+    return this.appService.healthAuth();
+  }
 }
