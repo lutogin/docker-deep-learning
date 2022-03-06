@@ -1,5 +1,7 @@
 FROM node:16-alpine
 
+ARG DEFAUL_PORT=80
+
 WORKDIR app
 
 COPY ./package.json /app
@@ -8,7 +10,9 @@ RUN npm i
 
 COPY . /app
 
-EXPOSE 3000
+ENV PORT $DEFAUL_PORT
+
+EXPOSE $PORT
 
 VOLUME ["/app/data"]
 
