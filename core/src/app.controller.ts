@@ -20,4 +20,9 @@ export class AppController {
   checkAuth() {
     return this.appService.healthAuth();
   }
+
+  @Get('/die')
+  die() {
+    process.exit(1);
+  }
 }
