@@ -16,4 +16,6 @@ EXPOSE $PORT
 
 VOLUME ["/app/data"]
 
+RUN npm run build
+
 CMD ["npm", "run", "start:prod"]
