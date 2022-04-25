@@ -14,7 +14,7 @@ ENV PORT $DEFAULT_PORT
 
 EXPOSE $PORT
 
-VOLUME ["/app/data"]
+#VOLUME ["/app/data"]
 
 RUN npm run build
 

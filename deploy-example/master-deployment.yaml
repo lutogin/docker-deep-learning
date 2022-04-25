@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  selector:
+    example-app-label: nest-app
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nest-deployment
+  labels:
+    app: nest
+spec:
+  replicas: 2
+  selector:
+#    matchLabels:
+#      app: nest-app
+##      tier: backend
+    matchExpressions:
+      - {key: example-app-label, operator: In, values: [nest-app, second-nest-app]}
+  template:
+    metadata:
+      labels:
+        example-app-label: nest-app
+#        tier: backend
+    spec:
+      containers:
+        - name: nest-node
+          image: lutogin/nest
+          imagePullPolicy: Always
+          livenessProbe:
+            httpGet:
+              port: 3000
+              path: /
+            periodSeconds: 3
+            initialDelaySeconds: 9
+#          volumeMounts:
+#            - mountPath: /app/strory
+#              name: story-volume
+#        - name: nest-node
+#          image: lutogin/nest
+#      volumes:
+#        - name: story-volume
+#          emptyDir: {}

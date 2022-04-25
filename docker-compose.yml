@@ -1,17 +1,17 @@
 version: "3.8"
 services:
-  mongodb:
-    container_name: ku-mongo
-    image: "mongo:4-bionic"
-    volumes:
-      - ./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
-      - data:/data/db
-    env_file:
-      - ./env/mongo.env
-    ports:
-      - "27018:27017"
-    networks:
-      - ku-net
+#  mongodb:
+#    container_name: ku-mongo
+#    image: "mongo:4-bionic"
+#    volumes:
+#      - ./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
+#      - data:/data/db
+#    env_file:
+#      - ./env/mongo.env
+#    ports:
+#      - "27018:27017"
+#    networks:
+#      - ku-net
 
   core:
     container_name: ku-core
@@ -28,15 +28,17 @@ services:
       - ./core:/app
       - /app/node_modules
     environment:
-      AUTH_HOST: ku-auth
-      MONGO_HOST: ku-mongo
+      AUTH_HOST: auth
+      TASKS_HOST: tasks
+#      MONGO_HOST: ku-mongo
     env_file:
       - ./core/.env
     networks:
       - ku-net
     depends_on:
       - auth
-      - mongodb
+      - tasks
+#      - mongodb
 
   auth:
     container_name: ku-auth
@@ -44,10 +46,29 @@ services:
       context: ./auth
       dockerfile: Dockerfile.dev
       args:
-        PORT: 3000
+        DEFAULT_PORT: 3000
+    volumes:
+      - /app/node_modules
+      - ./auth:/app
     ports:
       - "3001:3000"
       - "9230:9230"
+    networks:
+      - ku-net
+
+  tasks:
+    container_name: ku-tasks
+    build:
+      context: ./tasks
+      dockerfile: Dockerfile.dev
+      args:
+        DEFAULT_PORT: 3000
+    volumes:
+      - /app/node_modules
+      - ./tasks:/app
+    ports:
+      - "3002:3000"
+      - "9231:9231"
     networks:
       - ku-net
 

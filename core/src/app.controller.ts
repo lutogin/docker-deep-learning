@@ -1,6 +1,5 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get, Post } from '@nestjs/common';
 import { AppService } from './app.service';
-import { SaveToFileDto } from './dto/save-to-file.dto';
 
 @Controller()
 export class AppController {
@@ -11,14 +10,20 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  @Post()
-  saveToFile(@Body() data: SaveToFileDto) {
-    return this.appService.saveToFile(data);
-  }
-
-  @Get('/check/auth')
+  @Post('/auth')
   checkAuth() {
     return this.appService.healthAuth();
+  }
+
+  @Post('test')
+  async test() {
+    const validateToken = await this.appService.validateToken();
+    const task = await this.appService.createTask();
+
+    return {
+      validateToken,
+      task,
+    };
   }
 
   @Get('/die')

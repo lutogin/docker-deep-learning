@@ -1,20 +1,19 @@
 import { Injectable, Logger } from '@nestjs/common';
-import * as fs from 'fs';
-import * as path from 'path';
-import { SaveToFileDto } from './dto/save-to-file.dto';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AppService {
   private readonly authHost: string;
+  private readonly tasksHost: string;
   private readonly loggerContext = 'Core.AppService';
 
   constructor(
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
   ) {
-    this.authHost = configService.get<string>('AUTH');
+    this.authHost = configService.get<string>('AUTH_INTERNAL_HOST');
+    this.tasksHost = configService.get<string>('TASKS_INTERNAL_HOST');
   }
 
   getHello(): string {
@@ -23,20 +22,37 @@ export class AppService {
     return msg;
   }
 
-  async saveToFile({ payload }: SaveToFileDto) {
-    return fs.promises.writeFile(
-      path.join(__dirname, '..', 'data', 'data.txt'),
-      payload,
-    );
-  }
-
   async healthAuth(): Promise<string> {
     try {
-      const response = await this.httpService
+      const { data: response } = await this.httpService
         .get(`${this.authHost}/health`)
         .toPromise();
 
-      return response.data;
+      return response;
+    } catch (e) {
+      Logger.error(e.message || e, e.stack, this.loggerContext);
+    }
+  }
+
+  async validateToken(): Promise<boolean> {
+    try {
+      const { data: response } = await this.httpService
+        .post(`${this.authHost}/validate`)
+        .toPromise();
+
+      return response;
+    } catch (e) {
+      Logger.error(e.message || e, e.stack, this.loggerContext);
+    }
+  }
+
+  async createTask() {
+    try {
+      const { data: response } = await this.httpService
+        .post(`${this.tasksHost}/tasks`)
+        .toPromise();
+
+      return response;
     } catch (e) {
       Logger.error(e.message || e, e.stack, this.loggerContext);
     }

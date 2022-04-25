@@ -14,10 +14,11 @@ const {
   MONGO_PASSWORD,
   MONGO_URI_SCHEME,
   NODE_ENV = ENV_ENUM.LOCAL,
+  TASKS_HOST,
 } = process.env;
 
-const buildInternalServiceUrl = (env, service) => {
-  switch (env) {
+const buildInternalServiceUrl = (service) => {
+  switch (process.env.NODE_ENV) {
     case ENV_ENUM.PROD:
     case ENV_ENUM.QA:
     case ENV_ENUM.DEV:
@@ -31,10 +32,11 @@ const buildInternalServiceUrl = (env, service) => {
 export default () => ({
   NODE_ENV,
   PORT,
-  AUTH: buildInternalServiceUrl(NODE_ENV, AUTH_HOST),
+  AUTH_INTERNAL_HOST: buildInternalServiceUrl(AUTH_HOST),
   MONGO_HOST,
   MONGO_DATABASE,
   MONGO_USERNAME,
   MONGO_PASSWORD,
   MONGO_URI_SCHEME,
+  TASKS_INTERNAL_HOST: buildInternalServiceUrl(TASKS_HOST),
 });

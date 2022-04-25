@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: core-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: core
+  template:
+    metadata:
+      labels:
+        app: core
+    spec:
+      containers:
+        - name: core
+          image: lutogin/core
+          imagePullPolicy: Always
+          livenessProbe:
+            httpGet:
+              port: 3000
+              path: /
+            periodSeconds: 5
+            initialDelaySeconds: 5
+        - name: auth
+          image: lutogin/auth
+          imagePullPolicy: Always
+          livenessProbe:
+            httpGet:
+              port: 3000
+              path: /
+            periodSeconds: 5
+            initialDelaySeconds: 5
