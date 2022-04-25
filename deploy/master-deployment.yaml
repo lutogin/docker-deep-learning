@@ -13,7 +13,6 @@ spec:
 ---
 apiVersion: apps/v1
 kind: Deployment
-
 metadata:
   name: nest-deployment
   labels:
@@ -42,5 +41,11 @@ spec:
               path: /
             periodSeconds: 3
             initialDelaySeconds: 9
+          volumeMounts:
+            - mountPath: /app/strory
+              name: story-volume
 #        - name: nest-node
 #          image: lutogin/nest
+      volumes:
+        - name: story-volume
+          emptyDir: {}
