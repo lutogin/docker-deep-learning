@@ -1,29 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: core-deployment
+  name: tasks-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: core
+      app: tasks
   template:
     metadata:
       labels:
-        app: core
+        app: tasks
     spec:
       containers:
-        - name: core
+        - name: tasks
           env:
             - name: PORT
               value: "3000"
             - name: NODE_ENV
-              value: "prod"
-            - name: AUTH_HOST
-              value: "auth-service.default"
-            - name: TASKS_HOST
-              value: "tasks-service.default"
-          image: lutogin/core:latest
+              value: prod
+          image: lutogin/tasks:latest
           imagePullPolicy: Always
           livenessProbe:
             httpGet:

@@ -12,6 +12,8 @@ COPY . /app
 
 ENV PORT $DEFAULT_PORT
 
+ENV NODE_ENV local
+
 EXPOSE $PORT
 
 RUN npm run build

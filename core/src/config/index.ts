@@ -13,7 +13,7 @@ const {
   MONGO_USERNAME,
   MONGO_PASSWORD,
   MONGO_URI_SCHEME,
-  NODE_ENV = ENV_ENUM.LOCAL,
+  NODE_ENV,
   TASKS_HOST,
 } = process.env;
 
@@ -22,8 +22,8 @@ const buildInternalServiceUrl = (service) => {
     case ENV_ENUM.PROD:
     case ENV_ENUM.QA:
     case ENV_ENUM.DEV:
-      return service;
     case ENV_ENUM.LOCAL:
+      return `http://${service}:3000`;
     default:
       return `http://${service}:3000`;
   }

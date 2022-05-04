@@ -5,12 +5,12 @@ import { AppService } from './app.service';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @Get('health')
+  health() {
+    return 'ok';
   }
 
-  @Post('/auth')
+  @Post('auth')
   checkAuth() {
     return this.appService.healthAuth();
   }
@@ -26,7 +26,7 @@ export class AppController {
     };
   }
 
-  @Get('/die')
+  @Get('die')
   die() {
     process.exit(1);
   }

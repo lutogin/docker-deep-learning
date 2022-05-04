@@ -16,19 +16,13 @@ export class AppService {
     this.tasksHost = configService.get<string>('TASKS_INTERNAL_HOST');
   }
 
-  getHello(): string {
-    const msg = 'Hello World!';
-    console.log(' ---> msg', msg);
-    return msg;
-  }
-
-  async healthAuth(): Promise<string> {
+  async healthAuth(): Promise<Record<string, boolean>> {
     try {
       const { data: response } = await this.httpService
-        .get(`${this.authHost}/health`)
+        .post(`${this.authHost}/validate`)
         .toPromise();
 
-      return response;
+      return { validate: response };
     } catch (e) {
       Logger.error(e.message || e, e.stack, this.loggerContext);
     }
