@@ -20,9 +20,9 @@ spec:
             - name: NODE_ENV
               value: "prod"
             - name: AUTH_HOST
-              value: "auth-service.default"
+              value: "auth-service.default:3000"
             - name: TASKS_HOST
-              value: "tasks-service.default"
+              value: "tasks-service.default:3000"
           image: lutogin/core:latest
           imagePullPolicy: Always
           livenessProbe:

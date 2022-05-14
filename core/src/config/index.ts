@@ -22,8 +22,8 @@ const buildInternalServiceUrl = (service) => {
     case ENV_ENUM.PROD:
     case ENV_ENUM.QA:
     case ENV_ENUM.DEV:
+      return `http://${service}`;
     case ENV_ENUM.LOCAL:
-      return `http://${service}:3000`;
     default:
       return `http://${service}:3000`;
   }
